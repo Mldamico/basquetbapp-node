@@ -1,3 +1,5 @@
+import connection from '../db/connection';
+
 enum TipoJugador {
   JUGADOR = 'jugador',
   ENTRENADOR = 'entrenador',
@@ -5,15 +7,15 @@ enum TipoJugador {
 }
 
 class User {
-  private dni: string;
-  private nombre: string;
-  private apellido: string;
-  private usuario: string;
-  private password: string;
-  private tipo: TipoJugador;
-  private activo: boolean;
-  private urlFoto: string;
-  private fechaNacimiento: Date;
+  protected dni: string;
+  protected nombre: string;
+  protected apellido: string;
+  protected usuario: string;
+  protected password: string;
+  protected tipo: TipoJugador;
+  protected activo: boolean;
+  protected urlFoto: string;
+  protected fechaNacimiento: Date;
   constructor(
     nombre: string,
     apellido: string,
@@ -21,7 +23,6 @@ class User {
     usuario: string,
     password: string,
     fechaNacimiento: Date,
-    tipo: TipoJugador,
     urlFoto: string
   ) {
     this.nombre = nombre;
@@ -30,7 +31,7 @@ class User {
     this.usuario = usuario;
     this.password = password;
     this.fechaNacimiento = fechaNacimiento;
-    this.tipo = tipo;
+    this.tipo = TipoJugador.JUGADOR;
     this.activo = true;
     this.urlFoto = urlFoto;
   }
@@ -50,22 +51,43 @@ export class Jugador extends User {
     fechaNacimiento: Date,
     urlFoto: string,
     dorsal: number,
-    puntos: number,
     altura: number
   ) {
-    super(
-      nombre,
-      apellido,
-      dni,
-      usuario,
-      password,
-      fechaNacimiento,
-      TipoJugador.JUGADOR,
-      urlFoto
-    );
+    super(nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto);
     this.dorsal = dorsal;
-    this.puntos = puntos;
+    this.puntos = 0;
     this.altura = altura;
+  }
+
+  static getPlayers() {
+    return new Promise(function (resolve, reject) {
+      connection.query(
+        'SELECT * FROM players',
+        function (err, results, fields) {
+          if (err) {
+            return reject(err);
+          }
+          resolve(results);
+        }
+      );
+    });
+  }
+
+  save() {
+    connection.execute(
+      'INSERT INTO players (nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto, dorsal, altura) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        this.nombre,
+        this.apellido,
+        this.dni,
+        this.usuario,
+        this.password,
+        this.fechaNacimiento,
+        this.urlFoto,
+        this.dorsal,
+        this.altura,
+      ]
+    );
   }
 }
 
@@ -79,16 +101,7 @@ export class Asistente extends User {
     fechaNacimiento: Date,
     urlFoto: string
   ) {
-    super(
-      nombre,
-      apellido,
-      dni,
-      usuario,
-      password,
-      fechaNacimiento,
-      TipoJugador.ASISTENTE,
-      urlFoto
-    );
+    super(nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto);
   }
 }
 
@@ -105,16 +118,7 @@ export class Entrenador extends User {
     urlFoto: string,
     matricula: string
   ) {
-    super(
-      nombre,
-      apellido,
-      dni,
-      usuario,
-      password,
-      fechaNacimiento,
-      TipoJugador.ENTRENADOR,
-      urlFoto
-    );
+    super(nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto);
     this.matricula = matricula;
   }
 }
