@@ -1,6 +1,6 @@
 import connection from '../db/connection';
 
-enum TipoJugador {
+export enum TipoJugador {
   JUGADOR = 'jugador',
   ENTRENADOR = 'entrenador',
   ASISTENTE = 'asistente',
@@ -12,8 +12,7 @@ class User {
   protected apellido: string;
   usuario: string;
   password: string;
-  protected tipo: TipoJugador;
-  protected activo: boolean;
+  tipo: TipoJugador;
   protected urlFoto: string;
   protected fechaNacimiento: Date;
   constructor(
@@ -32,7 +31,6 @@ class User {
     this.password = password;
     this.fechaNacimiento = fechaNacimiento;
     this.tipo = TipoJugador.JUGADOR;
-    this.activo = true;
     this.urlFoto = urlFoto;
   }
 
@@ -41,6 +39,27 @@ class User {
       connection.execute(
         'SELECT * FROM players WHERE usuario = ?',
         [usuario],
+        function (err, results, fields) {
+          if (err) {
+            return reject(err);
+          }
+          const userDataString = JSON.stringify(results);
+          const userData = JSON.parse(userDataString);
+          if (results.toString()) {
+            resolve(userData);
+          } else {
+            resolve(null);
+          }
+        }
+      );
+    });
+  }
+
+  static getUserById(id: number): Promise<User[] | null> {
+    return new Promise(function (resolve, reject) {
+      connection.execute(
+        'SELECT * FROM players WHERE idplayer = ?',
+        [id],
         function (err, results, fields) {
           if (err) {
             return reject(err);
@@ -77,7 +96,7 @@ export class Jugador extends User {
   private dorsal: number;
   private puntos: number;
   private altura: number;
-
+  protected activo: boolean;
   constructor(
     nombre: string,
     apellido: string,
@@ -93,6 +112,7 @@ export class Jugador extends User {
     this.dorsal = dorsal;
     this.puntos = 0;
     this.altura = altura;
+    this.activo = false;
   }
 
   static getPlayers() {
@@ -111,7 +131,7 @@ export class Jugador extends User {
 
   save() {
     connection.execute(
-      'INSERT INTO players (nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto, dorsal, altura) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO players (nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto, dorsal, altura, activo, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)',
       [
         this.nombre,
         this.apellido,
@@ -122,6 +142,8 @@ export class Jugador extends User {
         this.urlFoto,
         this.dorsal,
         this.altura,
+        this.activo,
+        this.tipo,
       ]
     );
   }
@@ -138,6 +160,48 @@ export class Asistente extends User {
     urlFoto: string
   ) {
     super(nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto);
+  }
+
+  static activatePlayer(usuarioId: number) {
+    return new Promise(function (resolve, reject) {
+      connection.execute(
+        'UPDATE players SET activo = 0 WHERE idplayer = ?',
+        [usuarioId],
+        function (err, results, fields) {
+          if (err) {
+            return reject(err);
+          }
+
+          const userDataString = JSON.stringify(results);
+          const userData = JSON.parse(userDataString);
+          console.log(userData['affectedRows']);
+
+          resolve(userData);
+          // const userDataString = JSON.stringify(results);
+          // const userData = JSON.parse(userDataString);
+          // if (results.toString()) {
+          //   resolve(userData);
+          // } else {
+          //   resolve(null);
+          // }
+        }
+      );
+    });
+  }
+  static deactivatePlayer(usuarioId: number) {
+    return new Promise(function (resolve, reject) {
+      connection.execute(
+        'UPDATE players SET activo = 1 WHERE idplayer = ?',
+        [usuarioId],
+        function (err, results, fields) {
+          if (err) {
+            return reject(err);
+          }
+
+          resolve(results);
+        }
+      );
+    });
   }
 }
 
