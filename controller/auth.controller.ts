@@ -15,12 +15,19 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    const pass = bcrypt.compareSync(password, result![0].password);
+    const checkPassword = bcrypt.compareSync(password, result![0].password);
 
-    res.json({
-      ok: true,
-      result,
-    });
+    if (checkPassword) {
+      res.json({
+        ok: true,
+        result,
+      });
+    } else {
+      res.status(401).json({
+        ok: false,
+        msg: "Couldn't find any users with those credentials.",
+      });
+    }
   } catch (error) {
     res.status(400).json({
       ok: false,
