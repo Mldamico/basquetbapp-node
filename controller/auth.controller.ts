@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import User, { Jugador } from '../models/User';
+import User, { Asistente, Entrenador, Jugador } from '../models/User';
 import bcrypt from 'bcryptjs';
 
 export const login = async (req: Request, res: Response) => {
@@ -72,8 +72,81 @@ export const register = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({
       ok: false,
-      msg: "Couldn't Create new Post",
+      msg: "Couldn't Create a new player",
     });
   }
 };
-//2a$10$4/vgHGRxi2GIDWqGLVgR9./4jwrSLmTWlXPvaXGbHTvIqbuveO4OO
+
+export const createAssist = async (req: Request, res: Response) => {
+  const {
+    nombre,
+    apellido,
+    usuario,
+    password,
+    dni,
+    fechaNacimiento,
+    urlFoto,
+  } = req.body;
+  const salt = bcrypt.genSaltSync(10);
+  const hashPassword = bcrypt.hashSync(password, salt);
+  const assist = new Asistente(
+    nombre,
+    apellido,
+    dni,
+    usuario,
+    hashPassword,
+    fechaNacimiento,
+    urlFoto
+  );
+
+  try {
+    await assist.save();
+    res.json({
+      ok: true,
+      assist,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: "Couldn't Create a new assistant",
+    });
+  }
+};
+
+export const createTrainer = async (req: Request, res: Response) => {
+  const {
+    nombre,
+    apellido,
+    usuario,
+    password,
+    dni,
+    fechaNacimiento,
+    urlFoto,
+    matricula,
+  } = req.body;
+  const salt = bcrypt.genSaltSync(10);
+  const hashPassword = bcrypt.hashSync(password, salt);
+  const trainer = new Entrenador(
+    nombre,
+    apellido,
+    dni,
+    usuario,
+    hashPassword,
+    fechaNacimiento,
+    urlFoto,
+    matricula
+  );
+
+  try {
+    await trainer.save();
+    res.json({
+      ok: true,
+      trainer,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: "Couldn't Create a new trainer",
+    });
+  }
+};

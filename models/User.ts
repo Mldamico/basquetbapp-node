@@ -22,7 +22,8 @@ class User {
     usuario: string,
     password: string,
     fechaNacimiento: Date,
-    urlFoto: string
+    urlFoto: string,
+    tipo: TipoJugador
   ) {
     this.nombre = nombre;
     this.apellido = apellido;
@@ -30,7 +31,7 @@ class User {
     this.usuario = usuario;
     this.password = password;
     this.fechaNacimiento = fechaNacimiento;
-    this.tipo = TipoJugador.JUGADOR;
+    this.tipo = tipo;
     this.urlFoto = urlFoto;
   }
 
@@ -108,7 +109,16 @@ export class Jugador extends User {
     dorsal: number,
     altura: number
   ) {
-    super(nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto);
+    super(
+      nombre,
+      apellido,
+      dni,
+      usuario,
+      password,
+      fechaNacimiento,
+      urlFoto,
+      TipoJugador.JUGADOR
+    );
     this.dorsal = dorsal;
     this.puntos = 0;
     this.altura = altura;
@@ -159,7 +169,32 @@ export class Asistente extends User {
     fechaNacimiento: Date,
     urlFoto: string
   ) {
-    super(nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto);
+    super(
+      nombre,
+      apellido,
+      dni,
+      usuario,
+      password,
+      fechaNacimiento,
+      urlFoto,
+      TipoJugador.ASISTENTE
+    );
+  }
+
+  save() {
+    connection.execute(
+      'INSERT INTO players (nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        this.nombre,
+        this.apellido,
+        this.dni,
+        this.usuario,
+        this.password,
+        this.fechaNacimiento,
+        this.urlFoto,
+        this.tipo,
+      ]
+    );
   }
 
   static activatePlayer(usuarioId: number) {
@@ -174,16 +209,8 @@ export class Asistente extends User {
 
           const userDataString = JSON.stringify(results);
           const userData = JSON.parse(userDataString);
-          console.log(userData['affectedRows']);
 
           resolve(userData);
-          // const userDataString = JSON.stringify(results);
-          // const userData = JSON.parse(userDataString);
-          // if (results.toString()) {
-          //   resolve(userData);
-          // } else {
-          //   resolve(null);
-          // }
         }
       );
     });
@@ -198,7 +225,10 @@ export class Asistente extends User {
             return reject(err);
           }
 
-          resolve(results);
+          const userDataString = JSON.stringify(results);
+          const userData = JSON.parse(userDataString);
+
+          resolve(userData);
         }
       );
     });
@@ -218,8 +248,34 @@ export class Entrenador extends User {
     urlFoto: string,
     matricula: string
   ) {
-    super(nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto);
+    super(
+      nombre,
+      apellido,
+      dni,
+      usuario,
+      password,
+      fechaNacimiento,
+      urlFoto,
+      TipoJugador.ENTRENADOR
+    );
     this.matricula = matricula;
+  }
+
+  save() {
+    connection.execute(
+      'INSERT INTO players (nombre, apellido, dni, usuario, password, fechaNacimiento, urlFoto, tipo, matricula) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        this.nombre,
+        this.apellido,
+        this.dni,
+        this.usuario,
+        this.password,
+        this.fechaNacimiento,
+        this.urlFoto,
+        this.tipo,
+        this.matricula,
+      ]
+    );
   }
 }
 
