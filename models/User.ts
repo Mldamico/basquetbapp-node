@@ -10,8 +10,8 @@ class User {
   protected dni: string;
   protected nombre: string;
   protected apellido: string;
-  protected usuario: string;
-  protected password: string;
+  usuario: string;
+  password: string;
   protected tipo: TipoJugador;
   protected activo: boolean;
   protected urlFoto: string;
@@ -34,6 +34,42 @@ class User {
     this.tipo = TipoJugador.JUGADOR;
     this.activo = true;
     this.urlFoto = urlFoto;
+  }
+
+  static getUser(usuario: string): Promise<User[] | null> {
+    return new Promise(function (resolve, reject) {
+      connection.execute(
+        'SELECT * FROM players WHERE usuario = ?',
+        [usuario],
+        function (err, results, fields) {
+          if (err) {
+            return reject(err);
+          }
+          const userDataString = JSON.stringify(results);
+          const userData = JSON.parse(userDataString);
+          if (results.toString()) {
+            resolve(userData);
+          } else {
+            resolve(null);
+          }
+        }
+      );
+    });
+  }
+
+  static login(usuario: string, password: string) {
+    return new Promise(function (resolve, reject) {
+      connection.execute(
+        'SELECT * FROM players WHERE usuario = ? AND password = ?',
+        [usuario, password],
+        function (err, results, fields) {
+          if (err) {
+            return reject(err);
+          }
+          resolve(results);
+        }
+      );
+    });
   }
 }
 
