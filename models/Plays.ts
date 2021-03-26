@@ -1,47 +1,28 @@
-import { Match } from './Match';
-import { Jugador } from './User';
-
 export class Plays {
-  valorPunto: number;
-  puntosDeLaJugada: number;
-  convirtio: boolean;
-  base: Jugador;
-  escolta: Jugador;
-  alero: Jugador;
-  alaPivot: Jugador;
-  pivot: Jugador;
-  jugadorAsistente: Jugador;
-  jugadorAnotador: Jugador;
-  cuarto: number;
-  tiempoDelPartido: string;
-  partido: Match;
+  nombre: string;
+  urlVideo: string;
+  valorDefault: number;
+  activa: boolean;
+  posicionTirador: string;
+  posicionAsistente: string;
+  jugadaUtilizada: boolean;
+  urlImagen: string;
+
   constructor(
-    valor: number,
-    puntosDeLaJugada: number,
-    convirtio: boolean,
-    base: Jugador,
-    escolta: Jugador,
-    alero: Jugador,
-    alaPivot: Jugador,
-    pivot: Jugador,
-    jugadorAnotador: Jugador,
-    jugadorAsistente: Jugador,
-    cuarto: number,
-    tiempoDelPartido: string,
-    partido: Match
+    nombre: string,
+    urlVideo: string,
+    urlImagen: string,
+    valorDefault: number,
+    posicionTirador: string,
+    posicionAsistente: string
   ) {
-    this.valorPunto = valor;
-    this.puntosDeLaJugada = puntosDeLaJugada;
-    this.convirtio = convirtio;
-    this.base = base;
-    this.escolta = escolta;
-    this.alero = alero;
-    this.alaPivot = alaPivot;
-    this.pivot = pivot;
-    this.jugadorAnotador = jugadorAnotador;
-    this.jugadorAsistente = jugadorAsistente;
-    this.cuarto = cuarto;
-    this.tiempoDelPartido = tiempoDelPartido;
-    this.partido = partido;
+    this.nombre = nombre;
+    this.urlVideo = urlVideo;
+    this.urlImagen = urlImagen;
+    this.valorDefault = valorDefault;
+    this.activa = true;
+    this.posicionTirador = posicionTirador;
+    this.posicionAsistente = posicionAsistente;
+    this.jugadaUtilizada = false;
   }
 }
