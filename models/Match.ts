@@ -17,7 +17,6 @@ export class Match {
 
   createMatch() {
     const jugadoresCitados = this.jugadoresCitados;
-    // INSERT INTO matchs (fecha_partido, rival, tanteador_equipo, tanteador_rival) VALUES (?, ?, ?, ?)
     connection.execute(
       'INSERT INTO matchs (fecha_partido ,rival, tanteador_equipo, tanteador_rival) VALUES (?, ?, ?, ?)',
       [
@@ -48,5 +47,24 @@ export class Match {
         }
       }
     );
+  }
+
+  static endMatch(tanteadorEquipo: number, tanteadorRival: number, id: number) {
+    return new Promise(function (resolve, reject) {
+      connection.execute(
+        'UPDATE matchs SET tanteador_equipo = ?, tanteador_rival = ? WHERE idmatch = ?',
+        [tanteadorEquipo, tanteadorRival, id],
+        function (err, results, fields) {
+          if (err) {
+            return reject(err);
+          }
+
+          const matchDataString = JSON.stringify(results);
+          const matchData = JSON.parse(matchDataString);
+
+          resolve(matchData);
+        }
+      );
+    });
   }
 }

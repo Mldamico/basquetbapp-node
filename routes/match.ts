@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { beginMatch } from '../controller/match.controller';
+import { beginMatch, endMatch } from '../controller/match.controller';
 
 const router = Router();
 
 router.post('/', beginMatch);
+router.put('/end/:id', endMatch);
 
 export default router;
