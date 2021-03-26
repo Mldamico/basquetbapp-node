@@ -15,6 +15,25 @@ export class Match {
     this.tanteadorRival = 0;
   }
 
+  static findById(id: number) {
+    return new Promise(function (resolve, reject) {
+      connection.execute(
+        'SELECT * FROM matchs where idmatch = ?',
+        [id],
+        function (err, results, fields) {
+          if (err) {
+            return reject(err);
+          }
+
+          const matchDataString = JSON.stringify(results);
+          const matchData = JSON.parse(matchDataString);
+
+          resolve(matchData);
+        }
+      );
+    });
+  }
+
   createMatch() {
     const jugadoresCitados = this.jugadoresCitados;
     connection.execute(

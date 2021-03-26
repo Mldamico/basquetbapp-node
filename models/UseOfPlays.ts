@@ -1,4 +1,5 @@
 import { Match } from './Match';
+import { Plays } from './Plays';
 import { Jugador } from './User';
 
 export class UseOfPlays {
@@ -15,6 +16,7 @@ export class UseOfPlays {
   cuarto: number;
   tiempoDelPartido: string;
   partido: Match;
+  jugada: Plays;
   constructor(
     valor: number,
     puntosDeLaJugada: number,
@@ -28,7 +30,8 @@ export class UseOfPlays {
     jugadorAsistente: Jugador,
     cuarto: number,
     tiempoDelPartido: string,
-    partido: Match
+    partido: Match,
+    jugada: Plays
   ) {
     this.valorPunto = valor;
     this.puntosDeLaJugada = puntosDeLaJugada;
@@ -43,5 +46,6 @@ export class UseOfPlays {
     this.cuarto = cuarto;
     this.tiempoDelPartido = tiempoDelPartido;
     this.partido = partido;
+    this.jugada = jugada;
   }
 }
