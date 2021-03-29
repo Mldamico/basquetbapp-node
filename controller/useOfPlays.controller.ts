@@ -1,5 +1,6 @@
 import { Response, Request } from 'express';
 import { Match } from '../models/Match';
+import { Plays } from '../models/Plays';
 
 export const registerPlay = async (req: Request, res: Response) => {
   const {
@@ -19,9 +20,11 @@ export const registerPlay = async (req: Request, res: Response) => {
   } = req.body;
   try {
     const partido = await Match.findById(idMatch);
+    const play = await Plays.findById(idJugada);
     res.json({
       ok: true,
       partido,
+      play,
     });
   } catch (error) {
     res.status(400).json({
