@@ -15,7 +15,7 @@ export class Match {
     this.tanteadorRival = 0;
   }
 
-  static findById(id: number) {
+  static findById(id: number): Promise<Match> {
     return new Promise(function (resolve, reject) {
       connection.execute(
         'SELECT * FROM matchs where idmatch = ?',

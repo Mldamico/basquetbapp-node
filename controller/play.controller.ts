@@ -33,9 +33,10 @@ export const createPlay = async (req: Request, res: Response) => {
 };
 
 export const getPlayById = async (req: Request, res: Response) => {
-  const { idPlay } = req.params;
+  const { id } = req.params;
   try {
-    const play = await Plays.findById(+idPlay);
+    const play = await Plays.findById(+id);
+    console.log(play);
     res.json({
       ok: true,
       play,

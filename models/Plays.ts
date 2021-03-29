@@ -63,10 +63,10 @@ export class Plays {
     });
   }
 
-  static findById(id: number) {
+  static findById(id: number): Promise<Plays> {
     return new Promise(function (resolve, reject) {
       connection.execute(
-        'SELECT * FROM play where idplay = ?',
+        'SELECT * FROM play WHERE idplay = ?',
         [id],
         function (err, results, fields) {
           if (err) {

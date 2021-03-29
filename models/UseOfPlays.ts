@@ -1,40 +1,35 @@
-import { Match } from './Match';
-import { Plays } from './Plays';
-import { Jugador } from './User';
+import connection from '../db/connection';
 
 export class UseOfPlays {
   valorPunto: number;
-  puntosDeLaJugada: number;
   convirtio: boolean;
-  base: Jugador;
-  escolta: Jugador;
-  alero: Jugador;
-  alaPivot: Jugador;
-  pivot: Jugador;
-  jugadorAsistente: Jugador;
-  jugadorAnotador: Jugador;
+  base: number;
+  escolta: number;
+  alero: number;
+  alaPivot: number;
+  pivot: number;
+  jugadorAsistente: number;
+  jugadorAnotador: number;
   cuarto: number;
   tiempoDelPartido: string;
-  partido: Match;
-  jugada: Plays;
+  partido: number;
+  jugada: number;
   constructor(
     valor: number,
-    puntosDeLaJugada: number,
     convirtio: boolean,
-    base: Jugador,
-    escolta: Jugador,
-    alero: Jugador,
-    alaPivot: Jugador,
-    pivot: Jugador,
-    jugadorAnotador: Jugador,
-    jugadorAsistente: Jugador,
+    base: number,
+    escolta: number,
+    alero: number,
+    alaPivot: number,
+    pivot: number,
+    jugadorAnotador: number,
+    jugadorAsistente: number,
     cuarto: number,
     tiempoDelPartido: string,
-    partido: Match,
-    jugada: Plays
+    partido: number,
+    jugada: number
   ) {
     this.valorPunto = valor;
-    this.puntosDeLaJugada = puntosDeLaJugada;
     this.convirtio = convirtio;
     this.base = base;
     this.escolta = escolta;
@@ -47,5 +42,26 @@ export class UseOfPlays {
     this.tiempoDelPartido = tiempoDelPartido;
     this.partido = partido;
     this.jugada = jugada;
+  }
+
+  save() {
+    connection.execute(
+      'INSERT INTO useOfPlays (valor_punto, convirtio, base, escolta, alero, ala_pivot, pivot, jugador_asistente, jugador_tirador, cuarto, tiempo_partido, partido, jugada) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        this.valorPunto,
+        this.convirtio,
+        this.base,
+        this.escolta,
+        this.alero,
+        this.alaPivot,
+        this.pivot,
+        this.jugadorAsistente,
+        this.jugadorAnotador,
+        this.cuarto,
+        this.tiempoDelPartido,
+        this.partido,
+        this.jugada,
+      ]
+    );
   }
 }

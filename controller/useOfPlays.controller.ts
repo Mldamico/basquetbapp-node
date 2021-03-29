@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
 import { Match } from '../models/Match';
 import { Plays } from '../models/Plays';
+import { UseOfPlays } from '../models/UseOfPlays';
 
 export const registerPlay = async (req: Request, res: Response) => {
   const {
@@ -18,13 +19,26 @@ export const registerPlay = async (req: Request, res: Response) => {
     idMatch,
     convirtio,
   } = req.body;
+  const usoJugada = new UseOfPlays(
+    valor,
+    convirtio,
+    base,
+    escolta,
+    alero,
+    alaPivot,
+    pivot,
+    jugadorTirador,
+    jugadorAsistente,
+    cuarto,
+    tiempo,
+    idMatch,
+    idJugada
+  );
   try {
-    const partido = await Match.findById(idMatch);
-    const play = await Plays.findById(idJugada);
+    await usoJugada.save();
     res.json({
       ok: true,
-      partido,
-      play,
+      usoJugada,
     });
   } catch (error) {
     res.status(400).json({
