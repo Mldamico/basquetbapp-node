@@ -43,7 +43,7 @@ export const registerPlay = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({
       ok: false,
-      msg: "Couldn't find any users",
+      msg: 'Network Error',
     });
   }
 };

@@ -72,7 +72,7 @@ export const register = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({
       ok: false,
-      msg: "Couldn't Create a new player",
+      msg: 'Network Error',
     });
   }
 };
@@ -108,7 +108,7 @@ export const createAssist = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({
       ok: false,
-      msg: "Couldn't Create a new assistant",
+      msg: 'Network error',
     });
   }
 };
@@ -146,7 +146,7 @@ export const createTrainer = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({
       ok: false,
-      msg: "Couldn't Create a new trainer",
+      msg: 'Network Error',
     });
   }
 };

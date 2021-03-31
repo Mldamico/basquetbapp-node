@@ -44,6 +44,25 @@ export class Plays {
     );
   }
 
+  static search(nombre: string): Promise<Plays[]> {
+    return new Promise(function (resolve, reject) {
+      connection.execute(
+        'SELECT * FROM play WHERE nombre = ?',
+        [nombre],
+        function (err, results, fields) {
+          if (err) {
+            return reject(err);
+          }
+
+          const playDataString = JSON.stringify(results);
+          const playData = JSON.parse(playDataString);
+
+          resolve(playData);
+        }
+      );
+    });
+  }
+
   static getPlays() {
     return new Promise(function (resolve, reject) {
       connection.execute(

@@ -63,3 +63,28 @@ export const getPlays = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const searchPlay = async (req: Request, res: Response) => {
+  const { nombre } = req.params;
+  console.log(nombre);
+  try {
+    const plays = await Plays.search(nombre);
+    console.log(plays);
+    if (plays.length === 0) {
+      res.status(404).json({
+        ok: false,
+        msg: 'No plays founds',
+      });
+    }
+
+    res.json({
+      ok: true,
+      plays,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: 'Network Error',
+    });
+  }
+};

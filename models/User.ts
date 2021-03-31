@@ -127,15 +127,15 @@ export class Jugador extends User {
 
   static getPlayers() {
     return new Promise(function (resolve, reject) {
-      connection.query(
-        'SELECT * FROM players',
-        function (err, results, fields) {
-          if (err) {
-            return reject(err);
-          }
-          resolve(results);
+      connection.query('SELECT * FROM player', function (err, results, fields) {
+        if (err) {
+          return reject(err);
         }
-      );
+        const userDataString = JSON.stringify(results);
+        const userData = JSON.parse(userDataString);
+
+        resolve(userData);
+      });
     });
   }
 
